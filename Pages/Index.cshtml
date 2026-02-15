@@ -1,7 +1,7 @@
 ﻿@page
 
 @{
-    var fortune = await FortuneHelper.GetRandom("/usr/share/games/fortunes/off/");
+    var fortune = await FortuneHelper.GetRandom2("/usr/share/games/fortunes/off/");
     fortune = fortune.Replace("\n", "<br>");
 }
 

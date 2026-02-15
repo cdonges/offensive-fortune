@@ -2,6 +2,30 @@ using System.Buffers.Binary;
 
 static public class FortuneHelper
 {
+    static private string[] fortunes = [];
+    static private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+
+    static public async Task<string> GetRandom2(string folderName)
+    {
+        await semaphore.WaitAsync();
+        if (!fortunes.Any())
+        {
+            var newFortunes = new List<string>();
+            var files = Directory.GetFiles(folderName).Where(x => !x.Contains("."));
+
+            foreach (var file in files)
+            {
+                var contents = await File.ReadAllTextAsync(file);
+                newFortunes.AddRange(contents.Split('%').Select(x => TransformRot13(x)));
+            }
+
+            fortunes = newFortunes.ToArray();
+        }
+
+        semaphore.Release();
+        return fortunes[Random.Shared.Next(fortunes.Length - 1)];
+    }
+
     static public async Task<string> GetRandom(string folderName)
     {
         var filesWithSize = new Dictionary<string, float>();
