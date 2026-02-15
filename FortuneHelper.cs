@@ -7,7 +7,7 @@ static public class FortuneHelper
         var files = Directory.GetFiles(folderName, "*.dat");
         var datFileName = files[Random.Shared.Next(files.Length - 1)];
         using FileStream stream = new(datFileName, FileMode.Open, FileAccess.Read);
-        BinaryReader reader = new(stream, System.Text.Encoding.ASCII);
+        using BinaryReader reader = new(stream, System.Text.Encoding.ASCII);
         Header header;
         byte[] bytes = reader.ReadBytes(4);
         header.str_version = BinaryPrimitives.ReadUInt32BigEndian(bytes);
@@ -32,7 +32,7 @@ static public class FortuneHelper
 
         var contentFileName = Path.Join(Path.GetDirectoryName(datFileName), Path.GetFileNameWithoutExtension(datFileName));
         using FileStream dataStream = new FileStream(contentFileName, FileMode.Open, FileAccess.Read);
-        BinaryReader dataReader = new BinaryReader(dataStream, System.Text.Encoding.ASCII);
+        using BinaryReader dataReader = new BinaryReader(dataStream, System.Text.Encoding.ASCII);
         dataReader.BaseStream.Seek(pos, SeekOrigin.Begin);
         StringWriter fortune = new StringWriter();
 
