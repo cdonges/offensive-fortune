@@ -1,0 +1,1 @@
+docker build -t offensive-fortunes -f Dockerfile .

@@ -1,0 +1,10 @@
+services:
+  offensive-fortunes:
+    image: offensive-fortunes
+    ports:
+      - "6724:6724"
+    environment:
+      - ASPNETCORE_HTTP_PORTS=6724
+    volumes:
+      - /usr/share/games/fortunes/off:/usr/share/games/fortunes/off
+    restart: unless-stopped

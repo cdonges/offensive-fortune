@@ -1,0 +1,29 @@
+﻿@page
+
+@{
+    var fortune = await FortuneHelper.GetRandom("/usr/share/games/fortunes/off/");
+    fortune = fortune.Replace("\n", "<br>");
+}
+
+<html>
+<style>
+    body {
+  background-color: #101010;
+  color: #ffffff;
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-size: x-large;
+}
+div.text-center {
+    padding-top: 10%;
+      display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+<head>
+    <title>Offensive</title>
+</head>
+<div class="text-center">
+@Html.Raw(fortune)
+</div>
+</html>
