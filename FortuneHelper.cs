@@ -4,9 +4,15 @@ static public class FortuneHelper
 {
     static public async Task<string> GetRandom(string folderName)
     {
+        var filesWithSize = new Dictionary<string, float>();
         var files = Directory.GetFiles(folderName, "*.dat");
-        var datFileName = files[Random.Shared.Next(files.Length - 1)];
-        using FileStream stream = new(datFileName, FileMode.Open, FileAccess.Read);
+        foreach (var file in files)
+        {
+            filesWithSize.Add(file, new FileInfo(file).Length);
+        }
+
+        var datFileName = filesWithSize.RandomElementByWeight(x => x.Value);
+        using FileStream stream = new(datFileName.Key, FileMode.Open, FileAccess.Read);
         using BinaryReader reader = new(stream, System.Text.Encoding.ASCII);
         Header header;
         byte[] bytes = reader.ReadBytes(4);
@@ -30,7 +36,7 @@ static public class FortuneHelper
 
         var pos = BinaryPrimitives.ReadUInt32BigEndian(reader.ReadBytes(4));
 
-        var contentFileName = Path.Join(Path.GetDirectoryName(datFileName), Path.GetFileNameWithoutExtension(datFileName));
+        var contentFileName = Path.Join(Path.GetDirectoryName(datFileName.Key), Path.GetFileNameWithoutExtension(datFileName.Key));
         using FileStream dataStream = new FileStream(contentFileName, FileMode.Open, FileAccess.Read);
         using BinaryReader dataReader = new BinaryReader(dataStream, System.Text.Encoding.ASCII);
         dataReader.BaseStream.Seek(pos, SeekOrigin.Begin);
