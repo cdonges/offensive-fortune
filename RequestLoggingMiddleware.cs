@@ -11,18 +11,24 @@ public class RequestLoggingMiddleware
 
     public async Task InvokeAsync(HttpContext context, ApplicationDbContext dbContext)
     {
-        var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+        var path = context.Request.Path.Value ?? "/";
         
-        var requestLog = new RequestLog
+        // Only log requests to the root path
+        if (path == "/")
         {
-            IpAddress = ipAddress,
-            Timestamp = DateTime.UtcNow,
-            Path = context.Request.Path.Value ?? "/",
-            Method = context.Request.Method
-        };
+            var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            
+            var requestLog = new RequestLog
+            {
+                IpAddress = ipAddress,
+                Timestamp = DateTime.UtcNow,
+                Path = path,
+                Method = context.Request.Method
+            };
 
-        await dbContext.RequestLogs.AddAsync(requestLog);
-        await dbContext.SaveChangesAsync();
+            await dbContext.RequestLogs.AddAsync(requestLog);
+            await dbContext.SaveChangesAsync();
+        }
 
         await next(context);
     }
