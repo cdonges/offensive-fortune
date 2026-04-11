@@ -1,11 +1,13 @@
 using System.Buffers.Binary;
 
-static public class FortuneHelper
-{
-    static private string[] fortunes = [];
-    static private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+namespace offensive_fortune;
 
-    static public async Task<string> GetRandom2(string folderName)
+public class FortuneService : IFortuneService
+{
+    private string[] fortunes = [];
+    private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
+
+    public async Task<string> GetRandom2(string folderName)
     {
         await semaphore.WaitAsync();
         if (!fortunes.Any())
@@ -26,7 +28,7 @@ static public class FortuneHelper
         return fortunes[Random.Shared.Next(fortunes.Length - 1)];
     }
 
-    static public async Task<string> GetRandom(string folderName)
+    public async Task<string> GetRandom(string folderName)
     {
         var filesWithSize = new Dictionary<string, float>();
         var files = Directory.GetFiles(folderName, "*.dat");
@@ -90,7 +92,7 @@ static public class FortuneHelper
     /// <summary>
     /// Performs the ROT13 character rotation.
     /// </summary>
-    public static string TransformRot13(string value)
+    private static string TransformRot13(string value)
     {
         char[] array = value.ToCharArray();
         for (int i = 0; i < array.Length; i++)

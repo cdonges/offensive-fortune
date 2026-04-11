@@ -1,8 +1,13 @@
 ﻿@page
+@using offensive_fortune
+@using Microsoft.EntityFrameworkCore
+@inject IFortuneService FortuneService
+@inject ApplicationDbContext DbContext
 
 @{
-    var fortune = await FortuneHelper.GetRandom2("/usr/share/games/fortunes/off/");
+    var fortune = await FortuneService.GetRandom2("/usr/share/games/fortunes/off/");
     fortune = fortune.Replace("\n", "<br>");
+    var requestCount = await DbContext.RequestLogs.CountAsync();
 }
 
 <html>
@@ -26,4 +31,5 @@ div.text-center {
 <div class="text-center">
 @Html.Raw(fortune)
 </div>
+<!-- Total requests logged: @requestCount -->
 </html>

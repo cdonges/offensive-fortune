@@ -1,10 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /App
 
-# Copy everything
-COPY . ./
-# Restore as distinct layers
+# Copy project file and restore dependencies
+COPY *.csproj ./
 RUN dotnet restore
+
+# Copy the rest of the code
+COPY . ./
 # Build and publish a release
 RUN dotnet publish -o out
 
