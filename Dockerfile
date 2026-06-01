@@ -14,6 +14,6 @@ RUN dotnet publish -o out
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
 COPY --from=build /App/out .
-#COPY off/ /usr/share/games/fortunes/off/
+COPY usr/share/games/fortunes/off/ /usr/share/games/fortunes/off/
 ENTRYPOINT ["dotnet", "fortune_web.dll"]
 EXPOSE 6724
