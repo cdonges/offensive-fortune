@@ -15,7 +15,7 @@ on:
 
 env:
   REGISTRY: forgejo.burbot-cardassian.ts.net
-  IMAGE_NAME: ${{ forgejo.repository }}
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:
