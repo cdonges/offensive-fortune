@@ -38,7 +38,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ forgejo.actor }}
+          username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
       - name: Download and install fortunes-off
