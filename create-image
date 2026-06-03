@@ -1,2 +1,0 @@
-docker build -t offensive-fortunes -f Dockerfile .
-docker compose up -d
