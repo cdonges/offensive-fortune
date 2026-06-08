@@ -26,12 +26,18 @@ jobs:
       contents: read
       packages: write
 
+    env:
+      DOCKER_HOST: tcp://docker-in-docker:2375
+      DOCKER_TLS_CERTDIR: ""
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          endpoint: tcp://docker-in-docker:2375
 
       - name: Log in to Forgejo Container Registry
         if: github.event_name != 'pull_request'
