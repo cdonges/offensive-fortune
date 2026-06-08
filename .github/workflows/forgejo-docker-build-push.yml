@@ -27,12 +27,16 @@ jobs:
       packages: write
 
     env:
-      DOCKER_HOST: tcp://docker-in-docker:2375
       DOCKER_TLS_CERTDIR: ""
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Docker Host
+        run: |
+          GATEWAY_IP=$(ip route | awk '/default/ { print $3 }')
+          echo "DOCKER_HOST=tcp://$GATEWAY_IP:2375" >> $GITHUB_ENV
 
       - name: Log in to Forgejo Container Registry
         if: github.event_name != 'pull_request'
