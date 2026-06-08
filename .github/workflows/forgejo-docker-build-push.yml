@@ -35,7 +35,8 @@ jobs:
 
       - name: Set up Docker Host
         run: |
-          GATEWAY_IP=$(ip route | awk '/default/ { print $3 }')
+          HEX_GW=$(awk '$2=="00000000" {print $3}' /proc/net/route)
+          GATEWAY_IP=$(printf "%d.%d.%d.%d" $((16#${HEX_GW:6:2})) $((16#${HEX_GW:4:2})) $((16#${HEX_GW:2:2})) $((16#${HEX_GW:0:2})))
           echo "DOCKER_HOST=tcp://$GATEWAY_IP:2375" >> $GITHUB_ENV
 
       - name: Log in to Forgejo Container Registry
