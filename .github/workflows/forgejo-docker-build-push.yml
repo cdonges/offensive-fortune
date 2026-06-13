@@ -27,17 +27,17 @@ jobs:
       packages: write
 
     env:
-      DOCKER_HOST: tcp://docker-in-docker:2375
       DOCKER_TLS_CERTDIR: ""
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          endpoint: tcp://docker-in-docker:2375
+      - name: Set up Docker Host
+        run: |
+          HEX_GW=$(awk '$2=="00000000" {print $3}' /proc/net/route)
+          GATEWAY_IP=$(printf "%d.%d.%d.%d" $((16#${HEX_GW:6:2})) $((16#${HEX_GW:4:2})) $((16#${HEX_GW:2:2})) $((16#${HEX_GW:0:2})))
+          echo "DOCKER_HOST=tcp://$GATEWAY_IP:2375" >> $GITHUB_ENV
 
       - name: Log in to Forgejo Container Registry
         if: github.event_name != 'pull_request'
